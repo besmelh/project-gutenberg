@@ -6,6 +6,7 @@ export default function BookFetcher() {
   const [bookId, setBookId] = useState("");
   const [loading, setLoading] = useState(false);
   const [bookText, setBookText] = useState("");
+  const [metadata, setMetadata] = useState("");
   const [error, setError] = useState("");
 
   const handleFetch = async () => {
@@ -13,22 +14,41 @@ export default function BookFetcher() {
     setLoading(true);
     setError("");
     setBookText("");
+    setMetadata("");
 
     const baseUrl = process.env.NODE_ENV === "development" ? process.env.NEXT_PUBLIC_API_BASE : ""; // Netlify will handle prod path
     // const contentUrl = `https://www.gutenberg.org/files/${bookId}/${bookId}-0.txt`;
-    const contentUrl = `${baseUrl}/.netlify/functions/fetch-book?id=${bookId}`;
+    const bookUrl = `${baseUrl}/.netlify/functions/fetch-book?id=${bookId}`;
+    const metaUrl = `${baseUrl}/.netlify/functions/fetch-metadata?id=${bookId}`;
+
+    const metaRes = await fetch(`${baseUrl}/.netlify/functions/fetch-metadata?id=${bookId}`);
+    const metadata = await metaRes.json();
+    console.log('metadata: ', metadata);
+
 
     try {
-      const response = await fetch(contentUrl);
+      const response = await fetch(bookUrl);
 
       if (!response.ok) throw new Error("Book not found or unavailable.");
       const text = await response.text();
       setBookText(text.slice(0, 2000)); // Limit display for now
     } catch (err: any) {
-      setError(err.message || "Something went wrong.");
+      setError(err.message || "Something went wrong with book text.");
     } finally {
       setLoading(false);
     }
+
+    try {
+        const response = await fetch(metaUrl);
+        if (!response.ok) throw new Error("Metadata not found or unavailable.");
+        const metadata = await response.json();
+        console.log('metadata: ', metadata);
+        setMetadata(metadata);
+      } catch (err: any) {
+        setError(err.message || "Something went wrong with metadata.");
+      } finally {
+        setLoading(false);
+      }
   };
 
   return (
@@ -57,6 +77,19 @@ export default function BookFetcher() {
         <div className="mt-4 max-h-80 overflow-y-scroll border p-2 bg-gray-100 whitespace-pre-wrap">
           {bookText}
         </div>
+      )}
+
+    {metadata && (
+       <div className="mt-6">
+       <h3 className="text-xl font-semibold mb-2">Metadata</h3>
+       <ul className="list-disc pl-5 text-sm space-y-1">
+         {Object.entries(metadata).map(([key, value]) => (
+           <li key={key}>
+             <strong>{key}:</strong> {value}
+           </li>
+         ))}
+       </ul>
+     </div>
       )}
     </div>
   );
