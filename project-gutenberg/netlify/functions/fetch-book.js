@@ -2,10 +2,10 @@ const fetch = require('node-fetch');
 
 exports.handler = async (event) => {
   const { id } = event.queryStringParameters;
-  const contentUrl = `https://www.gutenberg.org/files/${id}/${id}-0.txt`;
+  const url = `https://www.gutenberg.org/files/${id}/${id}-0.txt`;
 
   try {
-    const response = await fetch(contentUrl);
+    const response = await fetch(url);
     if (!response.ok) {
       return {
         statusCode: 404,
