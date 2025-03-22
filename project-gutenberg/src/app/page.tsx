@@ -1,11 +1,12 @@
 "use client";
 
-import BookFetcher from "./components/BookFetcher";
-import BookHistory from "./components/BookHistory";
+import BookFetcher from "../components/BookFetcher";
+import BookHistory from "../components/BookHistory";
 
 export default function Home() {
 
   const handleBookSelect = (bookId: string) => {
+    console.log("selected: ", bookId);
   };
 
 

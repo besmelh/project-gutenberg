@@ -10,7 +10,7 @@ export default function BookFetcher() {
   const [error, setError] = useState("");
 
   const saveBookToLocalStorage = (id: string, metadata: Record<string, string>) => {
-    const existing = JSON.parse(localStorage.getItem("gutenbergBooks") || "[]");
+    const existing: Book[] = JSON.parse(localStorage.getItem("gutenbergBooks") || "[]");
   
     const newBook = {
       id,
@@ -20,7 +20,7 @@ export default function BookFetcher() {
     };
   
     // replace the book listing if already exist
-    const updated = [newBook, ...existing.filter((book: any) => book.id !== id)];
+    const updated: Book[] = [newBook, ...existing.filter((book: Book) => book.id !== id)];
     localStorage.setItem("gutenbergBooks", JSON.stringify(updated));
   };
   
