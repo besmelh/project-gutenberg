@@ -36,7 +36,7 @@ export default function BookFetcher() {
         if (err instanceof Error) {
             setError(err.message);
           } else {
-            setError("Something went wrong.");
+            setError("Something went wrong while fetching the book text.");
           }    } finally {
       setLoading(false);
     }
@@ -47,11 +47,15 @@ export default function BookFetcher() {
         const metadata = await response.json();
         console.log('metadata: ', metadata);
         setMetadata(metadata);
-      } catch (err: any) {
-        setError(err.message || "Something went wrong with metadata.");
-      } finally {
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("Something went wrong while fetching the book metadata.");
+            }    } finally {
         setLoading(false);
-      }
+        }
+
   };
 
   return (
