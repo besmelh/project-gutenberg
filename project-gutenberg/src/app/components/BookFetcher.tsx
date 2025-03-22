@@ -9,6 +9,22 @@ export default function BookFetcher() {
   const [metadata, setMetadata] = useState("");
   const [error, setError] = useState("");
 
+  const saveBookToLocalStorage = (id: string, metadata: Record<string, string>) => {
+    const existing = JSON.parse(localStorage.getItem("gutenbergBooks") || "[]");
+  
+    const newBook = {
+      id,
+      title: metadata.Title || "Untitled",
+      author: metadata.Author || "Unknown",
+      timestamp: Date.now(),
+    };
+  
+    // replace the book listing if already exist
+    const updated = [newBook, ...existing.filter((book: any) => book.id !== id)];
+    localStorage.setItem("gutenbergBooks", JSON.stringify(updated));
+  };
+  
+
   const handleFetch = async () => {
     if (!bookId) return;
     setLoading(true);
@@ -47,12 +63,10 @@ export default function BookFetcher() {
         const metadata = await response.json();
         console.log('metadata: ', metadata);
         setMetadata(metadata);
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("Something went wrong while fetching the book metadata.");
-            }    } finally {
+        saveBookToLocalStorage(bookId, metadata);
+      } catch (err: any) {
+        setError(err.message || "Something went wrong with metadata.");
+      } finally {
         setLoading(false);
         }
 
