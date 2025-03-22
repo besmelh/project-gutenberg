@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { Book } from "../app/types";
 
 export default function BookFetcher() {
   const [bookId, setBookId] = useState("");
@@ -53,7 +54,9 @@ export default function BookFetcher() {
             setError(err.message);
           } else {
             setError("Something went wrong while fetching the book text.");
-          }    } finally {
+          }    
+    } 
+    finally {
       setLoading(false);
     }
 
@@ -64,12 +67,16 @@ export default function BookFetcher() {
         console.log('metadata: ', metadata);
         setMetadata(metadata);
         saveBookToLocalStorage(bookId, metadata);
-      } catch (err: any) {
-        setError(err.message || "Something went wrong with metadata.");
-      } finally {
-        setLoading(false);
-        }
-
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong while fetching the book metadata.");
+      }    
+    } 
+    finally {
+      setLoading(false);
+    }
   };
 
   return (

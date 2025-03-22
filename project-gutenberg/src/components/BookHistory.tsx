@@ -1,13 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-type Book = {
-  id: string;
-  title: string;
-  author: string;
-  timestamp: number;
-};
+import type { Book } from "../app/types";
 
 type Props = {
   onSelect: (bookId: string) => void;
