@@ -24,9 +24,12 @@ export default function BookFetcher() {
       if (!response.ok) throw new Error("Book not found or unavailable.");
       const text = await response.text();
       setBookText(text.slice(0, 2000)); // Limit display for now
-    } catch (err: any) {
-      setError(err.message || "Something went wrong.");
-    } finally {
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            setError(err.message);
+          } else {
+            setError("Something went wrong.");
+          }    } finally {
       setLoading(false);
     }
   };
