@@ -14,8 +14,9 @@ export default function BookFetcher() {
     setError("");
     setBookText("");
 
+    const baseUrl = process.env.NODE_ENV === "development" ? process.env.NEXT_PUBLIC_API_BASE : ""; // Netlify will handle prod path
     // const contentUrl = `https://www.gutenberg.org/files/${bookId}/${bookId}-0.txt`;
-    const contentUrl = `http://localhost:8888/.netlify/functions/fetch-book?id=${bookId}`;
+    const contentUrl = `${baseUrl}/.netlify/functions/fetch-book?id=${bookId}`;
 
     try {
       const response = await fetch(contentUrl);
