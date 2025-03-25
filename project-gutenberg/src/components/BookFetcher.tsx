@@ -101,7 +101,12 @@ export default function BookFetcher() {
   
       const data = await response.json();
       setAnalysis(data.analysis || "No analysis returned.");
-    } catch (err) {
+    } catch (err : unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong while fetching the book metadata.");
+      }    
       setAnalysis("Failed to analyze the book.");
     } finally {
       setAnalyzing(false);
