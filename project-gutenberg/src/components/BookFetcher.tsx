@@ -52,7 +52,7 @@ export default function BookFetcher() {
 
       if (!response.ok) throw new Error("Book not found or unavailable.");
       const text = await response.text();
-      setBookText(text.slice(0, 2000)); // Limit display for now
+      setBookText(text);
     } catch (err: unknown) {
         if (err instanceof Error) {
             setError(err.message);
@@ -95,7 +95,7 @@ export default function BookFetcher() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          bookTitleAndAuthor: `Book title: ${metadata.Title || "Untitled"} by Author ${metadata.Author || "Unknown"}`
+          bookMetadata: metadata,
         })
       });
   

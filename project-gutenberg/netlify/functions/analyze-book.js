@@ -4,7 +4,7 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 exports.handler = async (event) => {
   try {
-    const { bookTitleAndAuthor } = JSON.parse(event.body);
+    const { bookMetadata } = JSON.parse(event.body);
 
     const prompt = `
   Analyze the following book and return:
@@ -16,8 +16,8 @@ exports.handler = async (event) => {
   
   If you dont have enough context about the book return "Not enough context on the book, contact support."
   
-  Book:
-  ${bookTitleAndAuthor}
+  Book info:
+  ${bookMetadata}
   `;
 
     const completion = await groq.chat.completions.create({
