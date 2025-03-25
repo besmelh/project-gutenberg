@@ -7,8 +7,13 @@ export default function BookFetcher() {
   const [bookId, setBookId] = useState("");
   const [loading, setLoading] = useState(false);
   const [bookText, setBookText] = useState("");
-  const [metadata, setMetadata] = useState("");
+  // const [metadata, setMetadata] = useState("");
+  const [metadata, setMetadata] = useState<Record<string, string>>({});
   const [error, setError] = useState("");
+
+  const [analysis, setAnalysis] = useState("");
+  const [analyzing, setAnalyzing] = useState(false);
+
 
   const saveBookToLocalStorage = (id: string, metadata: Record<string, string>) => {
     const existing: Book[] = JSON.parse(localStorage.getItem("gutenbergBooks") || "[]");
@@ -31,7 +36,7 @@ export default function BookFetcher() {
     setLoading(true);
     setError("");
     setBookText("");
-    setMetadata("");
+    setMetadata({});
 
     const baseUrl = process.env.NODE_ENV === "development" ? process.env.NEXT_PUBLIC_API_BASE : ""; // Netlify will handle prod path
     // const contentUrl = `https://www.gutenberg.org/files/${bookId}/${bookId}-0.txt`;
@@ -41,7 +46,6 @@ export default function BookFetcher() {
     const metaRes = await fetch(`${baseUrl}/.netlify/functions/fetch-metadata?id=${bookId}`);
     const metadata = await metaRes.json();
     console.log('metadata: ', metadata);
-
 
     try {
       const response = await fetch(bookUrl);
@@ -79,6 +83,32 @@ export default function BookFetcher() {
     }
   };
 
+  const handleAnalyze = async () => {
+    setAnalyzing(true);
+    setAnalysis("");
+  
+    const baseUrl = process.env.NODE_ENV === "development" ? process.env.NEXT_PUBLIC_API_BASE : "";
+
+
+    try {
+      const response = await fetch(`${baseUrl}/.netlify/functions/analyze-book`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookTitleAndAuthor: `Book title: ${metadata.Title || "Untitled"} by Author ${metadata.Author || "Unknown"}`
+        })
+      });
+  
+      const data = await response.json();
+      setAnalysis(data.analysis || "No analysis returned.");
+    } catch (err) {
+      setAnalysis("Failed to analyze the book.");
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+  
+
   return (
     <div className="p-4 max-w-xl mx-auto">
       <h2 className="text-xl font-bold mb-4">Fetch a Book by ID</h2>
@@ -101,11 +131,28 @@ export default function BookFetcher() {
 
       {error && <p className="text-red-600 mt-2">{error}</p>}
 
-      {bookText && (
+    {bookText && (
+      <>
         <div className="mt-4 max-h-80 overflow-y-scroll border p-2 bg-gray-100 whitespace-pre-wrap">
           {bookText}
         </div>
-      )}
+        <button
+          onClick={handleAnalyze}
+          disabled={analyzing}
+          className="mt-3 bg-indigo-600 text-white px-4 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
+        >
+          {analyzing ? "Analyzing..." : "Analyze Book"}
+        </button>
+      </>
+    )}
+
+    {analysis && (
+      <div className="mt-4 border p-4 bg-yellow-50">
+        <h3 className="text-lg font-semibold mb-2">AI-Powered Analysis</h3>
+        <pre className="whitespace-pre-wrap text-sm">{analysis}</pre>
+      </div>
+    )}
+
 
     {metadata && (
        <div className="mt-6">

@@ -43,7 +43,7 @@ export default function BookHistory({ onSelect }: Props) {
           >
             <strong>{book.title}</strong>
             <br />
-            <p className="text-sm text-gray-600">by {book.author}</p>
+            <p className="text-sm text-gray-600">Author: {book.author}</p>
             <p className="text-sm text-gray-600">ID: {book.id}</p>
             <p className="text-sm text-gray-600">Last accessed: {formatTimestamp(book.timestamp)}</p>
           </li>
