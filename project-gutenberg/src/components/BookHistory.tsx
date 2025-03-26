@@ -41,9 +41,9 @@ export default function BookHistory({ onSelect }: Props) {
             className="p-3 border rounded cursor-pointer hover:bg-gray-50"
             onClick={() => onSelect(book.id)}
           >
-            <strong>{book.title}</strong>
+            <strong>{book.metadata?.Title || "Untitled"}</strong>
             <br />
-            <p className="text-sm text-gray-600">Author: {book.author}</p>
+            <p className="text-sm text-gray-600">Author: {book.metadata?.Author || "Unknown"}</p>
             <p className="text-sm text-gray-600">ID: {book.id}</p>
             <p className="text-sm text-gray-600">Last accessed: {formatTimestamp(book.timestamp)}</p>
           </li>

@@ -7,22 +7,34 @@ export default function BookFetcher() {
   const [bookId, setBookId] = useState("");
   const [loading, setLoading] = useState(false);
   const [bookText, setBookText] = useState("");
-  // const [metadata, setMetadata] = useState("");
   const [metadata, setMetadata] = useState<Record<string, string>>({});
   const [error, setError] = useState("");
 
   const [analysis, setAnalysis] = useState("");
   const [analyzing, setAnalyzing] = useState(false);
 
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
 
-  const saveBookToLocalStorage = (id: string, metadata: Record<string, string>) => {
+
+
+  const handleSelectBook = (book: Book) => {
+    setSelectedBook(book);
+    setBookId(book.id);
+    setMetadata(book.metadata || {});
+    setAnalysis(book.analysis || "");
+  };
+
+  
+  const saveBookToLocalStorage = (id: string, metadata: Record<string, string>, analysis?: string) => {
     const existing: Book[] = JSON.parse(localStorage.getItem("gutenbergBooks") || "[]");
   
     const newBook = {
       id,
-      title: metadata.Title || "Untitled",
-      author: metadata.Author || "Unknown",
+      metadata: metadata || {},
+      // title: metadata.Title || "Untitled",
+      // author: metadata.Author || "Unknown",
       timestamp: Date.now(),
+      analysis: analysis || "",
     };
   
     // replace the book listing if already exist
@@ -70,7 +82,7 @@ export default function BookFetcher() {
         const metadata = await response.json();
         console.log('metadata: ', metadata);
         setMetadata(metadata);
-        saveBookToLocalStorage(bookId, metadata);
+        saveBookToLocalStorage(bookId, metadata, analysis);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
