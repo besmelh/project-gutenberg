@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import type { Book } from "../app/types";
 
 
@@ -12,6 +12,14 @@ type Props = {
 export default function BookDisplay({ book, onUpdate }: Props) {
     const [analyzing, setAnalyzing] = useState(false);
     const [error, setError] = useState("");
+    const [showBookText, setShowBookText] = useState(false); // to delay when dense content appears - prevent delays
+
+    useEffect(() => {
+      if (book.text) {
+        const timeout = setTimeout(() => setShowBookText(true), 320); // wait for panel to open
+        return () => clearTimeout(timeout);
+      }
+    }, [book.text]);
 
     const handleAnalyze = async () => {
         setAnalyzing(true);      
@@ -92,12 +100,21 @@ export default function BookDisplay({ book, onUpdate }: Props) {
 
       {error && <p className="text-red-500 text-sm">{error}</p>}
 
-      {book.text && (
-        <div className="bg-gray-100 p-4 max-h-96 overflow-y-auto border">
-          <h3 className="font-semibold mb-2">Content</h3>
-          <pre className="whitespace-pre-wrap text-sm">{book.text}</pre>
-        </div>
-      )}
+      {showBookText ? (
+        book.text && (
+            <div className="bg-gray-100 p-4 max-h-96 overflow-y-auto border">
+              <h3 className="font-semibold mb-2">Content</h3>
+              <pre className="whitespace-pre-wrap text-sm">{book.text}</pre>
+            </div>
+          )
+        // <div className="bg-gray-100 p-4 max-h-96 overflow-y-auto border">
+        //     <h3 className="font-semibold mb-2">Content</h3>
+        //     <pre className="whitespace-pre-wrap text-sm">{book.text}</pre>
+        // </div>
+        ) : (
+        <p className="text-sm text-gray-500 italic">Loading book text...</p>
+        )}
+      
 
     </div>
   );

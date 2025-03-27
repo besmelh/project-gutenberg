@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BookFetcher from "../components/BookFetcher";
 import BookHistory from "../components/BookHistory";
 import BookDisplay from "../components/BookDisplay";
@@ -26,7 +26,7 @@ export default function Home() {
 
       {/* Left panel: Search + History */}
       <div className={`transition-all duration-300 ease-in-out p-4 border-r overflow-y-auto ${
-        selectedBook ? "w-1/3" : "w-full"
+        selectedBook ? "w-1/4" : "w-full"
       }`}>
         <h1 className="text-2xl font-bold">Project Gutenberg</h1>
         {!selectedBook && (
