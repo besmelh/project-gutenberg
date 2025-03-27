@@ -67,8 +67,9 @@
 
   /* Accent palette */
   --accent: #F2C785;           /* Main accent */
-  --accent-darker: #D5983C;    /* For hover, active */
-  --accent-light: #fff5e5;     /* Replaces gray or light border */
+  --accent-dark: #e9b464;
+  --accent-darker: #D5983C;    
+  --accent-light: #fff5e5;    
   --accent-grey: #d5cbbc;
   --accent-white: #fffdfa; 
 
@@ -158,6 +159,7 @@
 
 
 .bg-accent { background-color: var(--accent); }
+.bg-accent-med-dark { background-color: var(--accent-dark); }
 .bg-accent-dark { background-color: var(--accent-darker); }
 .bg-accent-light { background-color: var(--accent-light); }
 .bg-accent-grey { background-color: var(--accent-grey); }

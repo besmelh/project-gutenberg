@@ -76,15 +76,6 @@ export default function BookDisplay({ book, onUpdate }: Props) {
         {/* Metadata box */}
 
         {book.metadata && (
-        // <div>
-        //   <h3 className="font-semibold">Metadata</h3>
-        //   <ul className="list-disc pl-4 text-sm">
-        //     {Object.entries(book.metadata).map(([key, value]) => (
-        //       <li key={key}><strong>{key}:</strong> {value}</li>
-        //     ))}
-        //   </ul>
-        // </div>
-
         <div className="flex-1 bg-accent-white border p-4 rounded shadow-sm">
         <h3 className="font-semibold text-2xl mb-8">📚 Metadata</h3>
         <ul className="text-sm space-y-2.5 opacity-80">

@@ -33,8 +33,15 @@ export default function BookHistory({ onSelect, selectedBook }: Props) {
 
   return (
     <div className="mt-8">
-      <div className="flex justify-between">
-      <h2 className="text-md font-bold mb-2 opacity-75">Previously Accessed Books</h2>
+      <div
+          className={`flex ${
+            selectedBook ? "justify-end" : "justify-between"
+          }`}>
+        {selectedBook ? 
+        <></>
+        : <h2 className="text-md font-bold mb-2 opacity-75">Previously Accessed Books</h2>
+        }
+      
         <button
           onClick={() => {
             localStorage.removeItem("gutenbergBooks");
@@ -52,7 +59,7 @@ export default function BookHistory({ onSelect, selectedBook }: Props) {
             // className="p-3 border rounded cursor-pointer border-accent-grey hover:border-accent-dark hover:bg-accent-light transition-colors "
             onClick={() => onSelect(book.id)}
             className={`p-3 border rounded cursor-pointer   transition-colors ${
-              selectedBook ? " border-accent-dark hover:bg-accent-dark" : "border-accent-grey hover:border-accent-dark hover:bg-accent-light"
+              selectedBook ? " border-accent-dark bg-accent-med-dark hover:bg-accent-dark" : "border-accent-grey hover:border-accent-dark hover:bg-accent-light"
             }`}
           >
             <strong className="opacity-90">{book.metadata?.Title || "Untitled"}</strong>
