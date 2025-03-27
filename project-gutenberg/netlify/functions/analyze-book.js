@@ -2,23 +2,40 @@ const Groq = require('groq-sdk');
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
+function objToStr(obj) {
+  const str = Object.entries(obj)
+    .map(
+      ([key, val]) =>
+        `${key[0].toUpperCase() + key.slice(1)}: ${
+          Array.isArray(val) ? val.join(', ') : val
+        }`
+    )
+    .join('\n');
+
+  console.log('stringified obj:', str);
+  return str;
+}
+
 exports.handler = async (event) => {
   try {
     const { bookMetadata } = JSON.parse(event.body);
 
     const prompt = `
   Analyze the following book and return:
-  1. summary: A short 1-paragraph plot summary.
-  2. characters: The main characters.
-  3. language: The language it is written in.
-  4. sentiment: Overall sentiment (positive, neutral, or negative).
-  5. genre: Book genre.
+  **Summary:** A short 1-paragraph plot summary.
+
+  **Characters:** The main characters of the book.
+
+  **Language:** The language it is written in.
+
+  **Sentiment:** Overall sentiment (positive, neutral, or negative).
+  
+  **Genre:** Book genre.
   
   If you dont have enough context about the book return "Not enough context on the book, contact support."
   
-  Book title:  ${bookMetadata?.Title || 'Untitled'},
-  Author:  ${bookMetadata?.Author || 'Author'}
-
+  Book Info:
+  ${objToStr(bookMetadata)}
   `;
 
     const completion = await groq.chat.completions.create({
@@ -26,20 +43,8 @@ exports.handler = async (event) => {
       messages: [
         {
           role: 'system',
-          content: `
-            You are a literary assistant that ONLY returns a valid JSON object.
-            DO NOT use markdown.
-            DO NOT include explanations or intros.
-            Return exactly this structure:
-            {
-              "summary": "...",
-              "characters": "...",
-              "language": "...",
-              "sentiment": "...",
-              "genre": "..."
-            }
-            No extra text. No trailing commas.
-            `,
+          content:
+            'You are a literary assistant that analyzes classic books. Dont give any intro or outro messages to your response. just give me what i asked for.',
         },
         {
           role: 'user',

@@ -83,40 +83,17 @@ export default function BookDisplay({ book, onUpdate }: Props) {
         </div>
       )}
 
-{/* {book.analysis && typeof book.analysis === "object" ? (
-  <div className="bg-yellow-50 p-4 rounded border space-y-2">
-     <button
-      onClick={handleAnalyze}
-      disabled={analyzing}
-      className="bg-accent text-accent-foreground px-4 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
-    >
-      Analyse
-    </button>
-    <h3 className="font-semibold">AI Analysis</h3>
-    <ul className="list-disc pl-4 text-sm">
-      {Object.entries(book.analysis).map(([key, value]) => (
-        <li key={key}>
-          <strong>{key}:</strong> {value}
-        </li>
-      ))}
-    </ul>
-  </div>
-) : (
-  <p className="text-sm italic">fallbak: {book.analysis}</p> // fallback if it's just a string
-)} */}
-
-
-     {/* {book.analysis ? (
-      <div>
-      <button
-      onClick={handleAnalyze}
-      disabled={analyzing}
-      className="bg-accent text-accent-foreground px-4 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
-    >
-      {analyzing ? "Analyzing..." : "Analyze Book"}
-    </button>
-
-        <div className="bg-yellow-50 p-4 rounded border space-y-2">
+    <h3 className="font-semibold">AI Analysis...</h3>
+    {/* {book.analysis ? (
+      
+        <div className="bg-yellow-50 p-4 rounded border">
+           <button
+          onClick={handleAnalyze}
+          disabled={analyzing}
+          className="bg-accent text-accent-foreground px-4 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
+        >
+          {analyzing ? "Analyzing..." : "Analyze Book"}
+        </button>
           <h3 className="font-semibold">AI Analysis</h3>
           <ul className="list-disc pl-4 text-sm">
             {Object.entries(book.analysis).map(([key, value]) => (
