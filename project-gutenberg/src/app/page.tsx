@@ -28,7 +28,7 @@ export default function Home() {
 
       {/* Left panel: Search + History */}
       <div className={`transition-all duration-300 p-4 border-r overflow-y-auto ${
-        selectedBook ? "w-1/3 max-w-xs" : "w-full max-w-xl"
+        selectedBook ? "w-1/3 max-w-xs" : "w-full"
       }`}>
         <h1 className="text-2xl font-bold">Project Gutenberg</h1>
         {!selectedBook && (
