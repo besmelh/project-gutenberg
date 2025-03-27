@@ -11,21 +11,10 @@ type Props = {
   
 export default function BookDisplay({ book, onUpdate }: Props) {
     const [analyzing, setAnalyzing] = useState(false);
-    const [analysis, setAnalysis] = useState("");
     const [error, setError] = useState("");
 
-    const saveBookToLocalStorage = (newBook: Book) => {
-        const existing: Book[] = JSON.parse(localStorage.getItem("gutenbergBooks") || "[]");
-    
-        // replace the book listing if already exist
-        const updated: Book[] = [newBook, ...existing.filter((book: Book) => book.id !== newBook.id)];
-        localStorage.setItem("gutenbergBooks", JSON.stringify(updated));
-      };
-
     const handleAnalyze = async () => {
-        setAnalyzing(true);
-        setAnalysis("");
-      
+        setAnalyzing(true);      
         const baseUrl = process.env.NODE_ENV === "development" ? process.env.NEXT_PUBLIC_API_BASE : "";
     
     
@@ -41,7 +30,6 @@ export default function BookDisplay({ book, onUpdate }: Props) {
           const data = await response.json();
           const updatedBook = { ...book, analysis: data.analysis || "No analysis returned." };
 
-          setAnalysis(data.analysis);
           console.log("analysis...", data.analysis)
 
         // Save updated book to localStorage
@@ -60,12 +48,9 @@ export default function BookDisplay({ book, onUpdate }: Props) {
           } else {
             setError("Something went wrong while fetching the book metadata.");
           }    
-          setAnalysis("Failed to analyze the book.");
         } finally {
           setAnalyzing(false);
         }
-    
-        console.log("analysis saved...")
     
       };
 

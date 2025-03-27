@@ -5,8 +5,6 @@ import BookFetcher from "../components/BookFetcher";
 import BookHistory from "../components/BookHistory";
 import BookDisplay from "../components/BookDisplay";
 import type { Book } from "../app/types";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 
 export default function Home() {

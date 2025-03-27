@@ -12,12 +12,7 @@ type Props = {
 export default function BookFetcher({ onBookFetched }: Props) {
   const [bookId, setBookId] = useState("");
   const [loading, setLoading] = useState(false);
-  const [bookText, setBookText] = useState("");
-  const [metadata, setMetadata] = useState<Record<string, string>>({});
   const [error, setError] = useState("");
-
-  const [analysis, setAnalysis] = useState("");
-  const [analyzing, setAnalyzing] = useState(false);
 
 
   
@@ -35,8 +30,6 @@ export default function BookFetcher({ onBookFetched }: Props) {
     if (!bookId) return;
     setLoading(true);
     setError("");
-    setBookText("");
-    setMetadata({});
 
     const baseUrl = process.env.NODE_ENV === "development" ? process.env.NEXT_PUBLIC_API_BASE : ""; // Netlify will handle prod path
     // const contentUrl = `https://www.gutenberg.org/files/${bookId}/${bookId}-0.txt`;
@@ -54,7 +47,6 @@ export default function BookFetcher({ onBookFetched }: Props) {
 
       if (!response.ok) throw new Error("Book not found or unavailable.");
       text = await response.text();
-      setBookText(text);   
     } catch (err: unknown) {
         if (err instanceof Error) {
             setError(err.message);
@@ -71,7 +63,6 @@ export default function BookFetcher({ onBookFetched }: Props) {
         if (!response.ok) throw new Error("Metadata not found or unavailable.");
         const metadata = await response.json();
         console.log('metadata: ', metadata);
-        setMetadata(metadata);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -88,54 +79,11 @@ export default function BookFetcher({ onBookFetched }: Props) {
       text,
       metadata: metadata || {},
       timestamp: Date.now(),
-      analysis: analysis || "",
+      analysis: "",
     };
     saveBookToLocalStorage(newBook);
     onBookFetched?.(newBook);
   };
-
-  // const handleAnalyze = async () => {
-  //   setAnalyzing(true);
-  //   setAnalysis("");
-  
-  //   const baseUrl = process.env.NODE_ENV === "development" ? process.env.NEXT_PUBLIC_API_BASE : "";
-
-
-  //   try {
-  //     const response = await fetch(`${baseUrl}/.netlify/functions/analyze-book`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         bookMetadata: metadata,
-  //       })
-  //     });
-  
-  //     const data = await response.json();
-  //     setAnalysis(data.analysis);
-
-  //     const newBook = {
-  //       id: bookId || "",
-  //       text: bookText || "",
-  //       metadata: metadata || {},
-  //       timestamp: Date.now(),
-  //       analysis: data.analysis || "",
-  //     };
-  //     saveBookToLocalStorage(newBook);
-  //   } catch (err : unknown) {
-  //     if (err instanceof Error) {
-  //       setError(err.message);
-  //     } else {
-  //       setError("Something went wrong while fetching the book metadata.");
-  //     }    
-  //     setAnalysis("Failed to analyze the book.");
-  //   } finally {
-  //     setAnalyzing(false);
-  //   }
-
-  //   console.log("analysis saved...")
-
-  // };
-  
 
   return (
     <div className="p-4 max-w-xl mx-auto">
@@ -159,41 +107,6 @@ export default function BookFetcher({ onBookFetched }: Props) {
 
       {error && <p className="text-red-600 mt-2">{error}</p>}
 
-    {/* {bookText && (
-      <>
-        <div className="mt-4 max-h-80 overflow-y-scroll border p-2 bg-gray-100 whitespace-pre-wrap">
-          {bookText}
-        </div>
-        <button
-          onClick={handleAnalyze}
-          disabled={analyzing}
-          className="mt-3 bg-indigo-600 text-white px-4 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
-        >
-          {analyzing ? "Analyzing..." : "Analyze Book"}
-        </button>
-      </>
-    )}
-
-    {analysis && (
-      <div className="mt-4 border p-4 bg-yellow-50">
-        <h3 className="text-lg font-semibold mb-2">AI-Powered Analysis</h3>
-        <pre className="whitespace-pre-wrap text-sm">{analysis}</pre>
-      </div>
-    )}
-
-
-    {metadata && (
-       <div className="mt-6">
-       <h3 className="text-xl font-semibold mb-2">Metadata</h3>
-       <ul className="list-disc pl-5 text-sm space-y-1">
-         {Object.entries(metadata).map(([key, value]) => (
-           <li key={key}>
-             <strong>{key}:</strong> {value}
-           </li>
-         ))}
-       </ul>
-     </div>
-      )} */}
     </div>
   );
 }
