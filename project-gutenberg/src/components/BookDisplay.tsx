@@ -84,7 +84,15 @@ export default function BookDisplay({ book, onUpdate }: Props) {
 
     <h3 className="font-semibold">AI Analysis...</h3>
     {book.analysis ? (
+      
         <div className="bg-yellow-50 p-4 rounded border">
+           <button
+          onClick={handleAnalyze}
+          disabled={analyzing}
+          className="bg-accent text-accent-foreground px-4 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
+        >
+          {analyzing ? "Analyzing..." : "Analyze Book"}
+        </button>
           <h3 className="font-semibold">AI Analysis</h3>
           <pre className="whitespace-pre-wrap text-sm">{book.analysis}</pre>
         </div>
