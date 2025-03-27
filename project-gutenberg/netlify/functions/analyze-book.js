@@ -1,55 +1,66 @@
-const Groq = require('groq-sdk');
+const groq = require('groq-sdk');
+const client = new groq.Groq({ apiKey: process.env.GROQ_API_KEY });
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+function chunkText(text, maxWords = 1500) {
+  const words = text.split(/\s+/);
+  const chunks = [];
+
+  for (let i = 0; i < words.length; i += maxWords) {
+    chunks.push(words.slice(i, i + maxWords).join(' '));
+  }
+
+  return chunks;
+}
 
 exports.handler = async (event) => {
   try {
-    const { bookMetadata, bookText } = JSON.parse(event.body);
+    const body = JSON.parse(event.body);
+    const { bookText, bookMetadata } = body;
 
-    console.log('booktext:', bookText);
-    // convert metadata object to readable string instead of object
-    const metadataText = Object.entries(bookMetadata)
-      .map(([key, val]) => `${key}: ${val}`)
-      .join('\n');
+    const chunks = chunkText(bookText);
+    const summaries = [];
 
-    const prompt = `
-  Analyze the following book and return:
-  1. summary: A short 1-paragraph plot summary.
-  2. characters: The main characters.
-  3. language: The language it is written in.
-  4. sentiment: Overall sentiment (positive, neutral, or negative).
-  5. genre: Book genre.
-    
-  Book info:
-  ${metadataText}
+    for (const chunk of chunks) {
+      const res = await client.chat.completions.create({
+        model: 'llama3-8b-8192',
+        messages: [
+          {
+            role: 'user',
+            content: `Summarize this part of the book:\n\n${chunk}`,
+          },
+        ],
+      });
 
-  Book text: 
-  ${bookText}
-  `;
+      summaries.push(res.choices[0].message.content);
+    }
 
-    const completion = await groq.chat.completions.create({
-      model: 'llama3-8b-8192', // or "llama3-70b-8192" if enabled
+    const finalRes = await client.chat.completions.create({
+      model: 'llama3-8b-8192',
       messages: [
         {
-          role: 'system',
-          content: 'You are a literary assistant that analyzes classic books.',
-        },
-        {
           role: 'user',
-          content: prompt,
+          content: `These are summaries of different parts of the book titled "${
+            bookMetadata?.Title || 'Untitled'
+          }" by "${
+            bookMetadata?.Author || 'Unknown'
+          }". Combine them into one clear and complete summary:\n\n${summaries.join(
+            '\n\n'
+          )}`,
         },
       ],
     });
 
+    const finalSummary = finalRes.choices[0].message.content;
+
     return {
       statusCode: 200,
-      body: JSON.stringify({ analysis: completion.choices[0].message.content }),
+      body: JSON.stringify({ analysis: finalSummary }),
     };
   } catch (err) {
-    console.error('Groq error:', err);
+    console.error('Analysis error:', err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to analyze book.' }),
+      body: JSON.stringify({ error: err.message || 'Something went wrong.' }),
     };
   }
 };
