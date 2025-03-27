@@ -5,7 +5,8 @@ import BookFetcher from "../components/BookFetcher";
 import BookHistory from "../components/BookHistory";
 import BookDisplay from "../components/BookDisplay";
 import type { Book } from "../app/types";
-import { Dialog, DialogContent } from "@/components/ui/dialog"; // from Shadcn
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 
 export default function Home() {
@@ -28,11 +29,17 @@ export default function Home() {
       <BookFetcher />
       <BookHistory onSelect={handleBookSelect} />
 
-      <Dialog open={!!selectedBook} onOpenChange={() => setSelectedBook(null)}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-scroll">
+      {/* <Dialog open={!!selectedBook} onOpenChange={() => setSelectedBook(null)}>
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-scroll">
           {selectedBook && <BookDisplay book={selectedBook} />}
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
+      <Sheet open={!!selectedBook} onOpenChange={(open) => !open && setSelectedBook(null)}>
+        <SheetContent side="right" className="w-full max-w-2xl overflow-y-scroll">
+          {selectedBook && <BookDisplay book={selectedBook} />}
+        </SheetContent>
+      </Sheet>
+
     </main>
   );
 }
