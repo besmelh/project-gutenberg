@@ -91,19 +91,20 @@ export default function BookFetcher({ onBookFetched }: Props) {
 
   return (
     <div className="p-4 max-w-xl mx-auto">
-      <h2 className="text-xl font-bold mb-4">Fetch a Book by ID</h2>
+      <h2 className="text-xl font-bold mb-4 opacity-75">Fetch a Book by ID</h2>
       <div className="flex gap-2 mb-10">
         <input
           type="text"
           placeholder="Enter Book ID (e.g., 75682)"
           value={bookId}
           onChange={(e) => setBookId(e.target.value)}
-          className="border rounded px-2 py-1 flex-1"
+          className="border rounded px-2 py-1 flex-1 border-accent-grey"
         />
         <button
           onClick={handleFetch}
           disabled={loading || !bookId}
-          className="bg-black text-white px-4 py-1 rounded hover:bg-gray-800 disabled:opacity-50"
+          className="text-foreground px-4 py-2 rounded bg-accent hover:bg-accent-dark transition-colors disabled:opacity-70"
+
         >
           {loading ? "Loading..." : "Fetch"}
         </button>

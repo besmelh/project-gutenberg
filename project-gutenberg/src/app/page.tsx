@@ -22,15 +22,18 @@ export default function Home() {
 
 
   return (
-  <main className={` flex px-6 py-8 ${
-        selectedBook ? "" : "max-w-screen-xl mx-auto"
+  <main className={` flex px-6  ${
+        selectedBook ? "py-8" : "py-18 max-w-screen-xl mx-auto"
       }`}>
         
       {/* Left panel: Search + History */}
       <div className={`transition-all duration-300 ease-in-out p-4 overflow-y-auto ${
         selectedBook ? "w-1/4 border-r" : "w-full"
       }`}>
-        <h1 className="text-2xl font-bold text-center mb-10">Project Gutenberg</h1>
+        <h1 className={`font-bold mb-10 
+        ${selectedBook ? "text-left text-2xl opacity-50" : "text-4xl text-center"}`}>
+          Project Gutenberg
+        </h1>
         {!selectedBook && (
           <div className="mb-20">
             <BookFetcher onBookFetched={(book) => setSelectedBook(book)}/>
