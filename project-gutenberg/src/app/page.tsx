@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import BookFetcher from "../components/BookFetcher";
 import BookHistory from "../components/BookHistory";
 import BookDisplay from "../components/BookDisplay";
