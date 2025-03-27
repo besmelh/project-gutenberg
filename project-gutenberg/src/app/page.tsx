@@ -25,8 +25,8 @@ export default function Home() {
   <main className="flex h-screen">
 
       {/* Left panel: Search + History */}
-      <div className={`transition-all duration-500 ease-in-out p-4 border-r overflow-y-auto ${
-        selectedBook ? "w-1/3 max-w-xs" : "w-full"
+      <div className={`transition-all duration-300 ease-in-out p-4 border-r overflow-y-auto ${
+        selectedBook ? "w-1/3" : "w-full"
       }`}>
         <h1 className="text-2xl font-bold">Project Gutenberg</h1>
         {!selectedBook && (
@@ -43,7 +43,7 @@ export default function Home() {
 
         {/* Right panel: BookDisplay */}
         {selectedBook && (
-        <div className="flex-1 p-6 overflow-y-auto">
+        <div className="flex-1 p-6 overflow-y-auto ">
           <button
             onClick={() => setSelectedBook(null)}
             className="mb-4 text-sm text-blue-600 hover:underline"

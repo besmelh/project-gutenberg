@@ -83,6 +83,10 @@ export default function BookFetcher({ onBookFetched }: Props) {
     };
     saveBookToLocalStorage(newBook);
     onBookFetched?.(newBook);
+    // setTimeout(() => {
+    //   onBookFetched?.(newBook);
+    // }, 0);
+    
   };
 
   return (
