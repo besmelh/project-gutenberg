@@ -87,7 +87,7 @@ export default function BookDisplay({ book, onUpdate }: Props) {
 
         <div className="flex-1 bg-accent-white border p-4 rounded shadow-sm">
         <h3 className="font-semibold text-2xl mb-8">📚 Metadata</h3>
-        <ul className="text-sm space-y-2.5 opacity-70">
+        <ul className="text-sm space-y-2.5 opacity-80">
           {Object.entries(book.metadata).map(([key, value]) => (
             <li key={key}>
               <strong>{key}:</strong> {Array.isArray(value) ? value.join(', ') : value}
@@ -113,21 +113,18 @@ export default function BookDisplay({ book, onUpdate }: Props) {
         </div>
 
         {book.analysis ? (
-          <div className="text-sm space-y-2 whitespace-pre-wrap">
-          {typeof book.analysis === "object" ? (
-            <ul className="list-disc pl-4 text-sm space-y-1">
-              {/* {Object.entries(book.analysis).map(([key, value]) => (
-                <li key={key}>
-                  <strong>{key}:</strong> {value}
-                </li>
-              ))} */}
-            </ul>
+      <div className="text-sm space-y-1 whitespace-pre-wrap">
+      {(book.analysis as unknown as string).split(/\*\*(.*?)\*\*/g).map((part: string, index: number) =>
+          index % 2 === 1 ? (
+            <p key={index} className="opacity-80 font-bold">{part.trim()} </p>
           ) : (
-            <pre className="whitespace-pre-wrap text-sm">{book.analysis}</pre>
-          )}          </div>
-        ) : (
-          <p className="text-sm text-gray-500 italic">No analysis yet.</p>
+            <p key={index}  className="opacity-80 mb-3">{part.trim()}</p> 
+          )
         )}
+      </div>
+    ) : (
+      <p className="text-sm text-gray-500 italic">No analysis yet.</p>
+    )}
       </div>
     </div>
 
