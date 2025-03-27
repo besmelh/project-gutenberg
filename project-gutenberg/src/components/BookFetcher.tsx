@@ -13,17 +13,6 @@ export default function BookFetcher() {
   const [analysis, setAnalysis] = useState("");
   const [analyzing, setAnalyzing] = useState(false);
 
-  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-
-
-
-  const handleSelectBook = (book: Book) => {
-    setSelectedBook(book);
-    setBookId(book.id);
-    setMetadata(book.metadata || {});
-    setAnalysis(book.analysis || "");
-  };
-
   
   const saveBookToLocalStorage = (id: string, text: string, metadata: Record<string, string>, analysis: string) => {
     const existing: Book[] = JSON.parse(localStorage.getItem("gutenbergBooks") || "[]");
