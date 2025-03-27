@@ -4,7 +4,13 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 exports.handler = async (event) => {
   try {
-    const { bookMetadata } = JSON.parse(event.body);
+    const { bookMetadata, bookText } = JSON.parse(event.body);
+
+    console.log('booktext:', bookText);
+    // convert metadata object to readable string instead of object
+    const metadataText = Object.entries(bookMetadata)
+      .map(([key, val]) => `${key}: ${val}`)
+      .join('\n');
 
     const prompt = `
   Analyze the following book and return:
@@ -13,11 +19,12 @@ exports.handler = async (event) => {
   3. language: The language it is written in.
   4. sentiment: Overall sentiment (positive, neutral, or negative).
   5. genre: Book genre.
-  
-  If you dont have enough context about the book return "Not enough context on the book, contact support."
-  
+    
   Book info:
-  ${bookMetadata}
+  ${metadataText}
+
+  Book text: 
+  ${bookText}
   `;
 
     const completion = await groq.chat.completions.create({
@@ -25,8 +32,7 @@ exports.handler = async (event) => {
       messages: [
         {
           role: 'system',
-          content:
-            'You are a literary assistant that analyzes classic books. Dont give any intro or outro messages to your response. just give me what i asked for. Return info in json format, make sure not to include trailing commas.',
+          content: 'You are a literary assistant that analyzes classic books.',
         },
         {
           role: 'user',
