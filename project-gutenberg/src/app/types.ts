@@ -2,9 +2,8 @@
 
 export type Book = {
     id: string;
+    text?: string;
     metadata?: Record<string, string>;
-    // title: string;
-    // author: string;
     timestamp: number;
     analysis?: string;                
   };
