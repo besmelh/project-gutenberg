@@ -70,6 +70,7 @@
   --accent-darker: #D5983C;    /* For hover, active */
   --accent-light: #fff5e5;     /* Replaces gray or light border */
   --accent-grey: #d5cbbc;
+  --accent-white: #fffdfa; 
 
 
   /* --accent-foreground: oklch(0.205 0 0); */
@@ -160,6 +161,7 @@
 .bg-accent-dark { background-color: var(--accent-darker); }
 .bg-accent-light { background-color: var(--accent-light); }
 .bg-accent-grey { background-color: var(--accent-grey); }
+.bg-accent-white { background-color: var(--accent-white); }
 
 .hover\:bg-accent:hover       { background-color: var(--accent); }
 .hover\:bg-accent-dark:hover  { background-color: var(--accent-darker); }

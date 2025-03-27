@@ -72,7 +72,7 @@ export default function BookDisplay({ book, onUpdate }: Props) {
       </div>
 
 
-      <div className="flex flex-col lg:flex-row gap-4">
+      <div className="flex flex-col lg:flex-row gap-4 mb-10">
         {/* Metadata box */}
 
         {book.metadata && (
@@ -85,9 +85,9 @@ export default function BookDisplay({ book, onUpdate }: Props) {
         //   </ul>
         // </div>
 
-        <div className="flex-1 bg-white border p-4 rounded shadow-sm">
-        <h3 className="font-semibold mb-2">📚 Metadata</h3>
-        <ul className="text-sm space-y-1">
+        <div className="flex-1 bg-accent-white border p-4 rounded shadow-sm">
+        <h3 className="font-semibold text-2xl mb-8">📚 Metadata</h3>
+        <ul className="text-sm space-y-2.5 opacity-70">
           {Object.entries(book.metadata).map(([key, value]) => (
             <li key={key}>
               <strong>{key}:</strong> {Array.isArray(value) ? value.join(', ') : value}
@@ -100,9 +100,9 @@ export default function BookDisplay({ book, onUpdate }: Props) {
 
 
       {/* AI Analysis box */}
-      <div className="flex-1 bg-yellow-50 border p-4 rounded shadow-sm relative">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="font-semibold">🤖 AI Analysis</h3>
+      <div className="flex-1 bg-accent-white border p-4 rounded shadow-sm relative">
+        <div className="flex justify-between items-start mb-8">
+          <h3 className="font-semibold text-2xl">🤖 AI Analysis</h3>
           <button
             onClick={handleAnalyze}
             disabled={analyzing}
@@ -132,75 +132,11 @@ export default function BookDisplay({ book, onUpdate }: Props) {
     </div>
 
 
-      {/* {book.metadata && (
-        <div>
-          <h3 className="font-semibold">Metadata</h3>
-          <ul className="list-disc pl-4 text-sm">
-            {Object.entries(book.metadata).map(([key, value]) => (
-              <li key={key}><strong>{key}:</strong> {value}</li>
-            ))}
-          </ul>
-        </div>
-      )} */}
-
-    {/* {book.analysis ? (
-      
-        <div className="bg-yellow-50 p-4 rounded border">
-           <button
-          onClick={handleAnalyze}
-          disabled={analyzing}
-          className="bg-accent text-accent-foreground px-4 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
-        >
-          {analyzing ? "Analyzing..." : "Analyze Book"}
-        </button>
-          <h3 className="font-semibold">AI Analysis</h3>
-          <ul className="list-disc pl-4 text-sm">
-            {Object.entries(book.analysis).map(([key, value]) => (
-              <li key={key}>
-                <strong>{key}:</strong> {value}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      ) : (
-        <button
-          onClick={handleAnalyze}
-          disabled={analyzing}
-          className="bg-accent text-accent-foreground px-4 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
-        >
-          {analyzing ? "Analyzing..." : "Analyze Book"}
-        </button>
-      )}  */}
-
-      {/* <button
-          onClick={handleAnalyze}
-          disabled={analyzing}
-          className="bg-accent text-accent-foreground px-4 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
-        >
-          {analyzing ? "Analyzing..." : "Analyze Book"}
-        </button>
-
-        {typeof book.analysis === "object" ? (
-            <ul className="list-disc pl-4 text-sm space-y-1">
-              {Object.entries(book.analysis).map(([key, value]) => (
-                <li key={key}>
-                  <strong>{key}:</strong> {value}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <pre className="whitespace-pre-wrap text-sm">{book.analysis}</pre>
-          )} */}
-
-
-
       {error && <p className="text-red-500 text-sm">{error}</p>}
 
       {showBookText ? (
         book.text && (
-            <div className="bg-gray-100 p-4 max-h-96 overflow-y-auto border">
-              <h3 className="font-semibold mb-2">Content</h3>
+            <div className="bg-accent-white text-foreground p-4 max-h-150 overflow-y-auto border flex flex-col items-center">
               <pre className="whitespace-pre-wrap text-sm">{book.text}</pre>
             </div>
           )
@@ -209,7 +145,7 @@ export default function BookDisplay({ book, onUpdate }: Props) {
         //     <pre className="whitespace-pre-wrap text-sm">{book.text}</pre>
         // </div>
         ) : (
-        <p className="text-sm text-gray-500 italic">Loading book text...</p>
+        <p className="text-sm bg-accent-white text-foreground italic">Loading book text...</p>
         )}
       
 
