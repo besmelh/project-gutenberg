@@ -28,20 +28,20 @@ export default function Home() {
         
       {/* Left panel: Search + History */}
       <div className={`transition-all duration-300 ease-in-out p-4 overflow-y-auto ${
-        selectedBook ? "w-1/4 border-r" : "w-full"
+        selectedBook ? "w-1/4 border-r bg-accent bg-opacity-10" : "w-full"
       }`}>
         <h1 className={`font-bold mb-10 
-        ${selectedBook ? "text-left text-2xl opacity-50" : "text-4xl text-center"}`}>
+        ${selectedBook ? "text-left text-2xl opacity-80" : "text-4xl text-center"}`}>
           Project Gutenberg
         </h1>
         {!selectedBook && (
           <div className="mb-20">
             <BookFetcher onBookFetched={(book) => setSelectedBook(book)}/>
-            <BookHistory onSelect={handleBookSelect} />
+            <BookHistory onSelect={handleBookSelect} selectedBook={false} />
           </div>
         )}
         {selectedBook && (
-          <BookHistory onSelect={handleBookSelect} />
+          <BookHistory onSelect={handleBookSelect} selectedBook={true}/>
         )}
 
       </div>
@@ -51,7 +51,7 @@ export default function Home() {
         <div className="flex-1 p-6 overflow-y-auto ">
           <button
             onClick={() => setSelectedBook(null)}
-            className="mb-4 text-sm text-blue-600 hover:underline"
+            className="mb-4 text-sm bg-accent text-accent-foreground px-3 py-1 rounded hover:bg-accent-dark disabled:opacity-50"
           >
             ← Back to Search
           </button>

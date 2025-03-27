@@ -5,6 +5,7 @@ import type { Book } from "../app/types";
 
 type Props = {
   onSelect: (bookId: string) => void;
+  selectedBook: boolean;
 };
 
 const formatTimestamp = (timestamp: number) => {
@@ -18,7 +19,7 @@ const formatTimestamp = (timestamp: number) => {
     });
   };
 
-export default function BookHistory({ onSelect }: Props) {
+export default function BookHistory({ onSelect, selectedBook }: Props) {
   const [savedBooks, setSavedBooks] = useState<Book[]>([]);
 
   useEffect(() => {
@@ -48,8 +49,11 @@ export default function BookHistory({ onSelect }: Props) {
         {savedBooks.map((book) => (
           <li
             key={book.id}
-            className="p-3 border rounded cursor-pointer border-accent-grey hover:border-accent-dark hover:bg-accent-light transition-colors "
+            // className="p-3 border rounded cursor-pointer border-accent-grey hover:border-accent-dark hover:bg-accent-light transition-colors "
             onClick={() => onSelect(book.id)}
+            className={`p-3 border rounded cursor-pointer   transition-colors ${
+              selectedBook ? " border-accent-dark hover:bg-accent-dark" : "border-accent-grey hover:border-accent-dark hover:bg-accent-light"
+            }`}
           >
             <strong className="opacity-90">{book.metadata?.Title || "Untitled"}</strong>
             <br/>
