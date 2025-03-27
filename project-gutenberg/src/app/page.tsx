@@ -27,13 +27,13 @@ export default function Home() {
   <main className="flex h-screen">
 
       {/* Left panel: Search + History */}
-      <div className={`transition-all duration-300 p-4 border-r overflow-y-auto ${
+      <div className={`transition-all duration-500 ease-in-out p-4 border-r overflow-y-auto ${
         selectedBook ? "w-1/3 max-w-xs" : "w-full"
       }`}>
         <h1 className="text-2xl font-bold">Project Gutenberg</h1>
         {!selectedBook && (
           <>
-            <BookFetcher />
+            <BookFetcher onBookFetched={(book) => setSelectedBook(book)}/>
             <BookHistory onSelect={handleBookSelect} />
           </>
         )}
@@ -52,7 +52,11 @@ export default function Home() {
           >
             ← Back to Search
           </button>
-          <BookDisplay book={selectedBook} />
+          <BookDisplay
+            book={selectedBook}
+            onUpdate={(updated) => setSelectedBook(updated)}
+          />
+
         </div>
       )}
 

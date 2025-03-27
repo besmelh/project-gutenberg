@@ -3,7 +3,13 @@
 import { useState } from "react";
 import type { Book } from "../app/types";
 
-export default function BookFetcher() {
+
+type Props = {
+  onBookFetched?: (book: Book) => void;
+};
+
+
+export default function BookFetcher({ onBookFetched }: Props) {
   const [bookId, setBookId] = useState("");
   const [loading, setLoading] = useState(false);
   const [bookText, setBookText] = useState("");
@@ -13,22 +19,14 @@ export default function BookFetcher() {
   const [analysis, setAnalysis] = useState("");
   const [analyzing, setAnalyzing] = useState(false);
 
+
   
-  const saveBookToLocalStorage = (id: string, text: string, metadata: Record<string, string>, analysis: string) => {
+  //const saveBookToLocalStorage = (id: string, text: string, metadata: Record<string, string>, analysis: string) => {
+  const saveBookToLocalStorage = (newBook: Book) => {
     const existing: Book[] = JSON.parse(localStorage.getItem("gutenbergBooks") || "[]");
-  
-    const newBook = {
-      id,
-      text: text || "",
-      metadata: metadata || {},
-      // title: metadata.Title || "Untitled",
-      // author: metadata.Author || "Unknown",
-      timestamp: Date.now(),
-      analysis: analysis || "",
-    };
-  
+
     // replace the book listing if already exist
-    const updated: Book[] = [newBook, ...existing.filter((book: Book) => book.id !== id)];
+    const updated: Book[] = [newBook, ...existing.filter((book: Book) => book.id !== newBook.id)];
     localStorage.setItem("gutenbergBooks", JSON.stringify(updated));
   };
   
@@ -55,6 +53,7 @@ export default function BookFetcher() {
       if (!response.ok) throw new Error("Book not found or unavailable.");
       const text = await response.text();
       setBookText(text);
+      
     } catch (err: unknown) {
         if (err instanceof Error) {
             setError(err.message);
@@ -82,44 +81,58 @@ export default function BookFetcher() {
     finally {
       setLoading(false);
     }
-
-    saveBookToLocalStorage(bookId, bookText, metadata, analysis);
-
+    
+    const newBook = {
+      id: bookId || "",
+      text: bookText || "",
+      metadata: metadata || {},
+      timestamp: Date.now(),
+      analysis: analysis || "",
+    };
+    saveBookToLocalStorage(newBook);
   };
 
-  const handleAnalyze = async () => {
-    setAnalyzing(true);
-    setAnalysis("");
+  // const handleAnalyze = async () => {
+  //   setAnalyzing(true);
+  //   setAnalysis("");
   
-    const baseUrl = process.env.NODE_ENV === "development" ? process.env.NEXT_PUBLIC_API_BASE : "";
+  //   const baseUrl = process.env.NODE_ENV === "development" ? process.env.NEXT_PUBLIC_API_BASE : "";
 
 
-    try {
-      const response = await fetch(`${baseUrl}/.netlify/functions/analyze-book`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          bookMetadata: metadata,
-        })
-      });
+  //   try {
+  //     const response = await fetch(`${baseUrl}/.netlify/functions/analyze-book`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         bookMetadata: metadata,
+  //       })
+  //     });
   
-      const data = await response.json();
-      setAnalysis(data.analysis);
-      saveBookToLocalStorage(bookId, bookText, metadata, data.analysis);
-    } catch (err : unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Something went wrong while fetching the book metadata.");
-      }    
-      setAnalysis("Failed to analyze the book.");
-    } finally {
-      setAnalyzing(false);
-    }
+  //     const data = await response.json();
+  //     setAnalysis(data.analysis);
 
-    console.log("analysis saved...")
+  //     const newBook = {
+  //       id: bookId || "",
+  //       text: bookText || "",
+  //       metadata: metadata || {},
+  //       timestamp: Date.now(),
+  //       analysis: data.analysis || "",
+  //     };
+  //     saveBookToLocalStorage(newBook);
+  //   } catch (err : unknown) {
+  //     if (err instanceof Error) {
+  //       setError(err.message);
+  //     } else {
+  //       setError("Something went wrong while fetching the book metadata.");
+  //     }    
+  //     setAnalysis("Failed to analyze the book.");
+  //   } finally {
+  //     setAnalyzing(false);
+  //   }
 
-  };
+  //   console.log("analysis saved...")
+
+  // };
   
 
   return (
@@ -144,7 +157,7 @@ export default function BookFetcher() {
 
       {error && <p className="text-red-600 mt-2">{error}</p>}
 
-    {bookText && (
+    {/* {bookText && (
       <>
         <div className="mt-4 max-h-80 overflow-y-scroll border p-2 bg-gray-100 whitespace-pre-wrap">
           {bookText}
@@ -178,7 +191,7 @@ export default function BookFetcher() {
          ))}
        </ul>
      </div>
-      )}
+      )} */}
     </div>
   );
 }
