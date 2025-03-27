@@ -137,32 +137,26 @@ export default function BookDisplay({ book, onUpdate }: Props) {
         </button>
       )}  */}
 
-<button
+      <button
           onClick={handleAnalyze}
           disabled={analyzing}
           className="bg-accent text-accent-foreground px-4 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
         >
           {analyzing ? "Analyzing..." : "Analyze Book"}
         </button>
-        
-{book.analysis && typeof book.analysis === "object" && !("error" in book.analysis) ? (
-  <div className="bg-yellow-50 p-4 rounded border space-y-2">
-    <h3 className="font-semibold">AI Analysis</h3>
-    <ul className="list-disc pl-4 text-sm">
-      {Object.entries(book.analysis).map(([key, value]) => (
-        <li key={key}>
-          <strong>{key}:</strong> {value}
-        </li>
-      ))}
-    </ul>
-  </div>
-) : (
-  <div className="text-sm italic text-red-500">
-    {typeof book.analysis === "string"
-      ? book.analysis
-      : book.analysis?.error || "No analysis returned."}
-  </div>
-)}
+
+        {typeof book.analysis === "object" ? (
+            <ul className="list-disc pl-4 text-sm space-y-1">
+              {Object.entries(book.analysis).map(([key, value]) => (
+                <li key={key}>
+                  <strong>{key}:</strong> {value}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <pre className="whitespace-pre-wrap text-sm">{book.analysis}</pre>
+          )}
+
 
 
       {error && <p className="text-red-500 text-sm">{error}</p>}

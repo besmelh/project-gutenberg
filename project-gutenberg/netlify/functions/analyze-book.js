@@ -63,26 +63,19 @@ exports.handler = async (event) => {
     // Remove trailing commas from objects/arrays
     cleaned = cleaned.replace(/,\s*}/g, '}').replace(/,\s*]/g, ']');
 
-    // Attempt to parse
-    let analysisJson;
+    let analysisData = cleaned;
     try {
-      analysisJson = JSON.parse(cleaned);
-
-      // Optional: check it has all expected keys
-      if (!analysisJson.summary || typeof analysisJson !== 'object') {
-        throw new Error('Missing or invalid analysis fields');
+      const parsed = JSON.parse(cleaned);
+      if (typeof parsed === 'object' && parsed.summary) {
+        analysisData = parsed;
       }
-    } catch (e) {
-      console.error('Failed to parse analysis JSON:', cleaned);
-      analysisJson = {
-        error: 'Invalid JSON format returned by model.',
-        raw: cleaned,
-      };
+    } catch {
+      // fallback to plain string
     }
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ analysis: analysisJson }),
+      body: JSON.stringify({ analysis: analysisData }),
     };
   } catch (err) {
     console.error('Groq error:', err);
