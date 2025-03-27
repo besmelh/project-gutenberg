@@ -27,18 +27,18 @@ exports.handler = async (event) => {
         {
           role: 'system',
           content: `
-            You are a literary assistant that returns ONLY raw JSON. 
-            Use your existing knowldeg base to fetch the info about the book.
-            NEVER include explanations, introductions, or markdown.
-            Return a plain JSON object with this exact structure:
+            You are a literary assistant that ONLY returns a valid JSON object.
+            DO NOT use markdown.
+            DO NOT include explanations or intros.
+            Return exactly this structure:
             {
-              "summary": string,
-              "characters": string,
-              "language": string,
-              "sentiment": string,
-              "genre": string
-              }
-            Do not include trailing commas or any other text. The output MUST be valid JSON.
+              "summary": "...",
+              "characters": "...",
+              "language": "...",
+              "sentiment": "...",
+              "genre": "..."
+            }
+            No extra text. No trailing commas.
             `,
         },
         {
@@ -51,25 +51,33 @@ exports.handler = async (event) => {
     const content = completion.choices[0].message.content;
     console.log('Raw model response:', completion.choices[0].message.content);
 
-    // Remove markdown backticks if they exist
-    if (content.startsWith('```')) {
-      content = content
+    // Remove markdown formatting (just in case)
+    let cleaned = content.trim();
+    if (cleaned.startsWith('```')) {
+      cleaned = cleaned
         .replace(/^```(json)?/, '')
         .replace(/```$/, '')
         .trim();
     }
 
-    // Remove trailing commas inside objects
-    // content = content.replace(/,\s*}/g, '}').replace(/,\s*]/g, ']');
+    // Remove trailing commas from objects/arrays
+    cleaned = cleaned.replace(/,\s*}/g, '}').replace(/,\s*]/g, ']');
 
-    // Try to parse the cleaned response
+    // Attempt to parse
     let analysisJson;
-
     try {
-      analysisJson = JSON.parse(content);
+      analysisJson = JSON.parse(cleaned);
+
+      // Optional: check it has all expected keys
+      if (!analysisJson.summary || typeof analysisJson !== 'object') {
+        throw new Error('Missing or invalid analysis fields');
+      }
     } catch (e) {
-      console.error('Failed to parse analysis JSON:', content);
-      analysisJson = { error: 'Invalid JSON format returned by model.' };
+      console.error('Failed to parse analysis JSON:', cleaned);
+      analysisJson = {
+        error: 'Invalid JSON format returned by model.',
+        raw: cleaned,
+      };
     }
 
     return {
