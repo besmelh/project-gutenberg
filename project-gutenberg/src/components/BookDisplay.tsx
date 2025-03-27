@@ -72,7 +72,67 @@ export default function BookDisplay({ book, onUpdate }: Props) {
       </div>
 
 
-      {book.metadata && (
+      <div className="flex flex-col lg:flex-row gap-4">
+        {/* Metadata box */}
+
+        {book.metadata && (
+        // <div>
+        //   <h3 className="font-semibold">Metadata</h3>
+        //   <ul className="list-disc pl-4 text-sm">
+        //     {Object.entries(book.metadata).map(([key, value]) => (
+        //       <li key={key}><strong>{key}:</strong> {value}</li>
+        //     ))}
+        //   </ul>
+        // </div>
+
+        <div className="flex-1 bg-white border p-4 rounded shadow-sm">
+        <h3 className="font-semibold mb-2">📚 Metadata</h3>
+        <ul className="text-sm space-y-1">
+          {Object.entries(book.metadata).map(([key, value]) => (
+            <li key={key}>
+              <strong>{key}:</strong> {Array.isArray(value) ? value.join(', ') : value}
+            </li>
+          ))}
+        </ul>
+        </div>
+      )}
+
+
+
+      {/* AI Analysis box */}
+      <div className="flex-1 bg-yellow-50 border p-4 rounded shadow-sm relative">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="font-semibold">🤖 AI Analysis</h3>
+          <button
+            onClick={handleAnalyze}
+            disabled={analyzing}
+            className="bg-accent text-accent-foreground text-sm px-3 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
+          >
+            {analyzing ? "Analyzing..." : book.analysis ? "Re-Analyze" : "Analyze Book"}
+          </button>
+        </div>
+
+        {book.analysis ? (
+          <div className="text-sm space-y-2 whitespace-pre-wrap">
+          {typeof book.analysis === "object" ? (
+            <ul className="list-disc pl-4 text-sm space-y-1">
+              {/* {Object.entries(book.analysis).map(([key, value]) => (
+                <li key={key}>
+                  <strong>{key}:</strong> {value}
+                </li>
+              ))} */}
+            </ul>
+          ) : (
+            <pre className="whitespace-pre-wrap text-sm">{book.analysis}</pre>
+          )}          </div>
+        ) : (
+          <p className="text-sm text-gray-500 italic">No analysis yet.</p>
+        )}
+      </div>
+    </div>
+
+
+      {/* {book.metadata && (
         <div>
           <h3 className="font-semibold">Metadata</h3>
           <ul className="list-disc pl-4 text-sm">
@@ -81,9 +141,8 @@ export default function BookDisplay({ book, onUpdate }: Props) {
             ))}
           </ul>
         </div>
-      )}
+      )} */}
 
-    <h3 className="font-semibold">AI Analysis...</h3>
     {/* {book.analysis ? (
       
         <div className="bg-yellow-50 p-4 rounded border">
@@ -114,7 +173,7 @@ export default function BookDisplay({ book, onUpdate }: Props) {
         </button>
       )}  */}
 
-      <button
+      {/* <button
           onClick={handleAnalyze}
           disabled={analyzing}
           className="bg-accent text-accent-foreground px-4 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
@@ -132,7 +191,7 @@ export default function BookDisplay({ book, onUpdate }: Props) {
             </ul>
           ) : (
             <pre className="whitespace-pre-wrap text-sm">{book.analysis}</pre>
-          )}
+          )} */}
 
 
 
