@@ -44,7 +44,7 @@ exports.handler = async (event) => {
         {
           role: 'system',
           content:
-            'You are a literary assistant that analyzes classic books. Dont give any intro or outro messages to your response. just give me what i asked for.',
+            'You are a literary assistant that analyzes classic books. Dont give any intro or outro messages to your response. just give me what i asked for. Use your existing knowldege base to infer details about the book.',
         },
         {
           role: 'user',
