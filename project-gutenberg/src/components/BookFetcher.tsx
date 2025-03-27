@@ -25,7 +25,7 @@ export default function BookFetcher() {
   };
 
   
-  const saveBookToLocalStorage = (id: string, text: string, metadata: Record<string, string>, analysis?: string) => {
+  const saveBookToLocalStorage = (id: string, text: string, metadata: Record<string, string>, analysis: string) => {
     const existing: Book[] = JSON.parse(localStorage.getItem("gutenbergBooks") || "[]");
   
     const newBook = {
@@ -94,7 +94,7 @@ export default function BookFetcher() {
       setLoading(false);
     }
 
-    // saveBookToLocalStorage(bookId, bookText, metadata, analysis);
+    saveBookToLocalStorage(bookId, bookText, metadata, analysis);
 
   };
 
@@ -115,7 +115,8 @@ export default function BookFetcher() {
       });
   
       const data = await response.json();
-      setAnalysis(data.analysis || "No analysis returned.");
+      setAnalysis(data.analysis);
+      saveBookToLocalStorage(bookId, bookText, metadata, data.analysis);
     } catch (err : unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -127,8 +128,7 @@ export default function BookFetcher() {
       setAnalyzing(false);
     }
 
-    console.log("ana.ysis saved...")
-    saveBookToLocalStorage(bookId, bookText, metadata, analysis);
+    console.log("analysis saved...")
 
   };
   
