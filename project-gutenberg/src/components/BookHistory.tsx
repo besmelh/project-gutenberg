@@ -18,7 +18,6 @@ const formatTimestamp = (timestamp: number) => {
     });
   };
 
-  
 export default function BookHistory({ onSelect }: Props) {
   const [savedBooks, setSavedBooks] = useState<Book[]>([]);
 
@@ -34,6 +33,15 @@ export default function BookHistory({ onSelect }: Props) {
   return (
     <div className="mt-8">
       <h2 className="text-lg font-bold mb-2">Previously Accessed Books</h2>
+      <button
+        onClick={() => {
+          localStorage.removeItem("gutenbergBooks");
+          setSavedBooks([]);
+        }}
+        className="text-sm text-red-600 hover:underline mb-2"
+      >
+        Clear History
+      </button>
       <ul className="space-y-2">
         {savedBooks.map((book) => (
           <li

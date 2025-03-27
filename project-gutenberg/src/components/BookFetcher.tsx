@@ -113,6 +113,7 @@ export default function BookFetcher() {
   
       const data = await response.json();
       setAnalysis(data.analysis || "No analysis returned.");
+      saveBookToLocalStorage(bookId, metadata, analysis);
     } catch (err : unknown) {
       if (err instanceof Error) {
         setError(err.message);
