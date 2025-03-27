@@ -22,18 +22,20 @@ export default function Home() {
 
 
   return (
-  <main className="flex h-screen">
-
-      {/* Left panel: Search + History */}
-      <div className={`transition-all duration-300 ease-in-out p-4 border-r overflow-y-auto ${
-        selectedBook ? "w-1/4" : "w-full"
+  <main className={` flex px-6 py-8 ${
+        selectedBook ? "" : "max-w-screen-xl mx-auto"
       }`}>
-        <h1 className="text-2xl font-bold">Project Gutenberg</h1>
+        
+      {/* Left panel: Search + History */}
+      <div className={`transition-all duration-300 ease-in-out p-4 overflow-y-auto ${
+        selectedBook ? "w-1/4 border-r" : "w-full"
+      }`}>
+        <h1 className="text-2xl font-bold text-center mb-10">Project Gutenberg</h1>
         {!selectedBook && (
-          <>
+          <div className="mb-20">
             <BookFetcher onBookFetched={(book) => setSelectedBook(book)}/>
             <BookHistory onSelect={handleBookSelect} />
-          </>
+          </div>
         )}
         {selectedBook && (
           <BookHistory onSelect={handleBookSelect} />
@@ -57,7 +59,6 @@ export default function Home() {
 
         </div>
       )}
-
     </main>
   );
 }

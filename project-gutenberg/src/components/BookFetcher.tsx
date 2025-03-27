@@ -92,7 +92,7 @@ export default function BookFetcher({ onBookFetched }: Props) {
   return (
     <div className="p-4 max-w-xl mx-auto">
       <h2 className="text-xl font-bold mb-4">Fetch a Book by ID</h2>
-      <div className="flex gap-2">
+      <div className="flex gap-2 mb-10">
         <input
           type="text"
           placeholder="Enter Book ID (e.g., 75682)"
