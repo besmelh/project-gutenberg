@@ -79,7 +79,7 @@ export default function BookFetcher({ onBookFetched }: Props) {
       text,
       metadata: metadata || {},
       timestamp: Date.now(),
-      analysis: "",
+      analysis: {},
     };
     saveBookToLocalStorage(newBook);
     onBookFetched?.(newBook);

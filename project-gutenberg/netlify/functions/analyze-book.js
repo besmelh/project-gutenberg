@@ -16,8 +16,9 @@ exports.handler = async (event) => {
   
   If you dont have enough context about the book return "Not enough context on the book, contact support."
   
-  Book info:
-  ${bookMetadata}
+  Book title:  ${bookMetadata?.Title || 'Untitled'},
+  Author:  ${bookMetadata?.Author || 'Author'}
+
   `;
 
     const completion = await groq.chat.completions.create({
@@ -25,8 +26,20 @@ exports.handler = async (event) => {
       messages: [
         {
           role: 'system',
-          content:
-            'You are a literary assistant that analyzes classic books. Dont give any intro or outro messages to your response. just give me what i asked for. Return info in json format, make sure not to include trailing commas.',
+          content: `
+            You are a literary assistant that returns ONLY raw JSON. 
+            Use your existing knowldeg base to fetch the info about the book.
+            NEVER include explanations, introductions, or markdown.
+            Return a plain JSON object with this exact structure:
+            {
+              "summary": string,
+              "characters": string,
+              "language": string,
+              "sentiment": string,
+              "genre": string
+              }
+            Do not include trailing commas or any other text. The output MUST be valid JSON.
+            `,
         },
         {
           role: 'user',
@@ -35,9 +48,33 @@ exports.handler = async (event) => {
       ],
     });
 
+    const content = completion.choices[0].message.content;
+    console.log('Raw model response:', completion.choices[0].message.content);
+
+    // Remove markdown backticks if they exist
+    if (content.startsWith('```')) {
+      content = content
+        .replace(/^```(json)?/, '')
+        .replace(/```$/, '')
+        .trim();
+    }
+
+    // Remove trailing commas inside objects
+    // content = content.replace(/,\s*}/g, '}').replace(/,\s*]/g, ']');
+
+    // Try to parse the cleaned response
+    let analysisJson;
+
+    try {
+      analysisJson = JSON.parse(content);
+    } catch (e) {
+      console.error('Failed to parse analysis JSON:', content);
+      analysisJson = { error: 'Invalid JSON format returned by model.' };
+    }
+
     return {
       statusCode: 200,
-      body: JSON.stringify({ analysis: completion.choices[0].message.content }),
+      body: JSON.stringify({ analysis: analysisJson }),
     };
   } catch (err) {
     console.error('Groq error:', err);
