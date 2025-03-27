@@ -24,21 +24,37 @@ export default function Home() {
 
 
   return (
-  <main className="p-4">
-      <h1 className="text-2xl font-bold">Project Gutenberg</h1>
-      <BookFetcher />
-      <BookHistory onSelect={handleBookSelect} />
+  <main className="flex h-screen">
 
-      {/* <Dialog open={!!selectedBook} onOpenChange={() => setSelectedBook(null)}>
-        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-scroll">
-          {selectedBook && <BookDisplay book={selectedBook} />}
-        </DialogContent>
-      </Dialog> */}
-      <Sheet open={!!selectedBook} onOpenChange={(open) => !open && setSelectedBook(null)}>
-        <SheetContent side="right" className="w-full max-w-2xl overflow-y-scroll">
-          {selectedBook && <BookDisplay book={selectedBook} />}
-        </SheetContent>
-      </Sheet>
+      {/* Left panel: Search + History */}
+      <div className={`transition-all duration-300 p-4 border-r overflow-y-auto ${
+        selectedBook ? "w-1/3 max-w-xs" : "w-full max-w-xl"
+      }`}>
+        <h1 className="text-2xl font-bold">Project Gutenberg</h1>
+        {!selectedBook && (
+          <>
+            <BookFetcher />
+            <BookHistory onSelect={handleBookSelect} />
+          </>
+        )}
+        {selectedBook && (
+          <BookHistory onSelect={handleBookSelect} />
+        )}
+
+      </div>
+
+        {/* Right panel: BookDisplay */}
+        {selectedBook && (
+        <div className="flex-1 p-6 overflow-y-auto">
+          <button
+            onClick={() => setSelectedBook(null)}
+            className="mb-4 text-sm text-blue-600 hover:underline"
+          >
+            ← Back to Search
+          </button>
+          <BookDisplay book={selectedBook} />
+        </div>
+      )}
 
     </main>
   );
