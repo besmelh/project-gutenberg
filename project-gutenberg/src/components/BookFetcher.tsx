@@ -47,13 +47,14 @@ export default function BookFetcher({ onBookFetched }: Props) {
     const metadata = await metaRes.json();
     console.log('metadata: ', metadata);
 
+    let text = "";
+
     try {
       const response = await fetch(bookUrl);
 
       if (!response.ok) throw new Error("Book not found or unavailable.");
-      const text = await response.text();
-      setBookText(text);
-      
+      text = await response.text();
+      setBookText(text);   
     } catch (err: unknown) {
         if (err instanceof Error) {
             setError(err.message);
@@ -84,12 +85,13 @@ export default function BookFetcher({ onBookFetched }: Props) {
     
     const newBook = {
       id: bookId || "",
-      text: bookText || "",
+      text,
       metadata: metadata || {},
       timestamp: Date.now(),
       analysis: analysis || "",
     };
     saveBookToLocalStorage(newBook);
+    onBookFetched?.(newBook);
   };
 
   // const handleAnalyze = async () => {
