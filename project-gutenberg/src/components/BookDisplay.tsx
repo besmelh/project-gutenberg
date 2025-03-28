@@ -114,7 +114,7 @@ export default function BookDisplay({ book, onUpdate }: Props) {
   <div className="text-sm space-y-1 whitespace-pre-wrap">
     {typeof book.analysis === "string" ? (
       (() => {
-        const parts = book.analysis.split(/\*\*(.*?)\*\*/g);
+        const parts = (book.analysis as string).split(/\*\*(.*?)\*\*/g);
         const items: React.ReactNode[] = [];
 
         for (let i = 1; i < parts.length; i += 2) {
