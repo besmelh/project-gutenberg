@@ -106,7 +106,7 @@ export default function BookDisplay({ book, onUpdate }: Props) {
             disabled={analyzing}
             className="bg-accent text-accent-foreground text-sm px-3 py-1 rounded hover:bg-accent-dark disabled:opacity-50"
           >
-            {analyzing ? "Analyzing..." : book.analysis ? "Re-Analyze" : "Analyze Book"}
+            {analyzing ? "Analyzing..." : "Analyze Book"}
           </button>
         </div>
 
