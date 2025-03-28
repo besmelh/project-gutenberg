@@ -37,8 +37,15 @@ export default function BookDisplay({ book, onUpdate }: Props) {
           });
       
           const data = await response.json();
-          const updatedBook = { ...book, analysis: data.analysis || "No analysis returned." };
-
+          // const updatedBook = { ...book, analysis: data.analysis || "No analysis returned." };
+          const updatedBook = {
+            ...book,
+            analysis:
+              typeof data.analysis === "string"
+                ? data.analysis
+                : JSON.stringify(data.analysis),
+          };
+          
           console.log("analysis...", data.analysis)
 
         // Save updated book to localStorage
@@ -104,18 +111,35 @@ export default function BookDisplay({ book, onUpdate }: Props) {
         </div>
 
         {book.analysis ? (
-      <div className="text-sm space-y-1 whitespace-pre-wrap">
-      {(book.analysis as unknown as string).split(/\*\*(.*?)\*\*/g).map((part: string, index: number) =>
-          index % 2 === 1 ? (
-            <p key={index} className="opacity-80 font-bold">{part.trim()} </p>
-          ) : (
-            <p key={index}  className="opacity-80 mb-3">{part.trim()}</p> 
-          )
-        )}
-      </div>
+  <div className="text-sm space-y-1 whitespace-pre-wrap">
+    {typeof book.analysis === "string" ? (
+      (() => {
+        const parts = book.analysis.split(/\*\*(.*?)\*\*/g);
+        const items: React.ReactNode[] = [];
+
+        for (let i = 1; i < parts.length; i += 2) {
+          const label = parts[i]?.trim();
+          const text = parts[i + 1]?.trim();
+          if (label && text) {
+            items.push(
+              <p key={i} className="text-sm mb-3">
+                <strong>{label}</strong> {text}
+              </p>
+            );
+          }
+        }
+
+        return items;
+      })() as React.ReactNode
     ) : (
-      <p className="text-sm text-gray-500 italic">No analysis yet.</p>
+      <p className="text-sm text-gray-500 italic">No valid analysis available.</p>
     )}
+
+  </div>
+) : (
+  <p className="text-sm text-gray-500 italic">No analysis yet.</p>
+)}
+
       </div>
     </div>
 

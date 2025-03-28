@@ -80,7 +80,8 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ analysis: analysisData }),
+      // body: JSON.stringify({ analysis: analysisData }),
+      body: JSON.stringify({ analysis: completion.choices[0].message.content }),
     };
   } catch (err) {
     console.error('Groq error:', err);
